@@ -1,5 +1,6 @@
-﻿using NexusEcommerce.Usuario.Domain.ValueObjects;
+﻿using NexusEcommerce.Usuario.Domain.Enums;
 using NexusEcommerce.Usuario.Domain.Exceptions;
+using NexusEcommerce.Usuario.Domain.ValueObjects;
 
 namespace NexusEcommerce.Usuario.Domain.Entities;
 
@@ -11,6 +12,9 @@ public class Cliente
     public Cpf Cpf { get; private set; } = null!;
     public string Email { get; private set; } = string.Empty;
 
+    // Adicione ao arquivo existente, logo após a propriedade Email:
+    public UserRole Role { get; private set; } = UserRole.Cliente; // Padrão: Cliente
+
     // Endereço agrupado (Propriedades opcionais até o onboarding etapa 2)
     public string? Cep { get; private set; }
     public string? Logradouro { get; private set; }
@@ -18,6 +22,17 @@ public class Cliente
     public string? Cidade { get; private set; }
     public string? Estado { get; private set; }
     public string? NumeroEndereco { get; private set; }
+
+    /// <summary>
+    /// Método para atribuir role a um usuário (apenas Admin)
+    /// </summary>
+    public void AtribuirRole(UserRole novaRole)
+    {
+        if (novaRole == Role)
+            throw new DomainException($"O usuário já possui o role {novaRole}");
+
+        Role = novaRole;
+    }
 
     protected Cliente() { }
 
